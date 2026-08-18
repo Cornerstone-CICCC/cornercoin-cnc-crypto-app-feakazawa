@@ -3,6 +3,7 @@
 class Account {
   protected username: string;
   protected balance: number;
+  protected balances: number[] = [];
 
   constructor(username: string, balance: number) {
     this.username = username;
@@ -15,6 +16,19 @@ class Account {
 
   set setBalance(newBalance: number) {
     this.balance = newBalance;
+  }
+
+  addBalance(value: number): void {
+    this.balances.push(value);
+  }
+
+  trackTransaction(): string {
+    return `All transactions: [${this.balances.join(", ")}]`;
+  }
+
+  accountBalance(): string {
+    const result = this.balances.reduce((total, value) => total + value, 0);
+    return `Account balance: ${result}`;
   }
 }
 
@@ -52,10 +66,13 @@ class Deposit extends Transaction {
 }
 
 const myAccount = new Account("snow-patrol", 500);
+myAccount.addBalance(myAccount.getBalance);
 const myWithdraw = new Withdrawal(myAccount, 110);
 myWithdraw.commit();
-console.log("Balance1:", myAccount.getBalance);
+myAccount.addBalance(myWithdraw.value);
 
 const myDeposit = new Deposit(myAccount, 199.99);
 myDeposit.commit();
-console.log("Balance2:", myAccount.getBalance);
+myAccount.addBalance(myDeposit.value);
+console.log(myAccount.trackTransaction());
+console.log(myAccount.accountBalance());
