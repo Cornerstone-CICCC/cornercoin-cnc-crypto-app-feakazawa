@@ -21,26 +21,30 @@ class Transaction {
         this.user = user;
         this.amount = amount;
     }
+    get value() {
+        return this.amount;
+    }
+    commit() {
+        this.user.setBalance = this.user.getBalance + this.value;
+    }
 }
 class Withdrawal extends Transaction {
     constructor(user, amount) {
         super(user, amount);
     }
-    commit() {
-        this.user.setBalance = this.user.getBalance - this.amount;
+    get value() {
+        return -this.amount;
     }
 }
 class Deposit extends Transaction {
     constructor(user, amount) {
         super(user, amount);
     }
-    commit() {
-        this.user.setBalance = this.user.getBalance + this.amount;
-    }
 }
 const myAccount = new Account("snow-patrol", 500);
 const myWithdraw = new Withdrawal(myAccount, 110);
 myWithdraw.commit();
+console.log("Balance1:", myAccount.getBalance);
 const myDeposit = new Deposit(myAccount, 199.99);
 myDeposit.commit();
-console.log(myAccount.getBalance);
+console.log("Balance2:", myAccount.getBalance);
