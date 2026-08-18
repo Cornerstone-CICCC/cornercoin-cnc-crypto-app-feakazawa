@@ -57,6 +57,25 @@ class Withdrawal extends Transaction {
   get value() {
     return -this.amount;
   }
+
+  allowWithdraw(): boolean {
+    if (
+      this.user.getBalance === 0 ||
+      Math.abs(this.value) > this.user.getBalance
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  commit() {
+    if (this.allowWithdraw() === false) {
+      throw new Error("Insuficient balance availabe");
+    }
+
+    this.user.setBalance = this.user.getBalance + this.value;
+  }
 }
 
 class Deposit extends Transaction {
@@ -65,14 +84,16 @@ class Deposit extends Transaction {
   }
 }
 
-const myAccount = new Account("snow-patrol", 500);
-myAccount.addBalance(myAccount.getBalance);
-const myWithdraw = new Withdrawal(myAccount, 110);
-myWithdraw.commit();
-myAccount.addBalance(myWithdraw.value);
+// try withdrawal money when balance = 0
+// const myAccount = new Account("snow-white", 0);
+// myAccount.addBalance(myAccount.getBalance);
+// const myWithdraw = new Withdrawal(myAccount, 240);
+// myWithdraw.commit();
+// myAccount.addBalance(myWithdraw.value);
 
-const myDeposit = new Deposit(myAccount, 199.99);
-myDeposit.commit();
-myAccount.addBalance(myDeposit.value);
-console.log(myAccount.trackTransaction());
-console.log(myAccount.accountBalance());
+// try withdrawal money when balance < withdrawal amount
+const myAccount2 = new Account("snow-white", 100);
+myAccount2.addBalance(myAccount2.getBalance);
+const myWithdraw2 = new Withdrawal(myAccount2, 200);
+myWithdraw2.commit();
+myAccount2.addBalance(myWithdraw2.value);
