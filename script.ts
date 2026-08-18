@@ -17,13 +17,19 @@ class Account {
     this.balance = newBalance;
   }
 }
-class Withdrawal {
+
+class Transaction {
   user: Account;
   amount: number;
 
   constructor(user: Account, amount: number) {
     this.user = user;
     this.amount = amount;
+  }
+}
+class Withdrawal extends Transaction {
+  constructor(user: Account, amount: number) {
+    super(user, amount);
   }
 
   commit() {
@@ -31,13 +37,9 @@ class Withdrawal {
   }
 }
 
-class Deposit {
-  user: Account;
-  amount: number;
-
+class Deposit extends Transaction {
   constructor(user: Account, amount: number) {
-    this.user = user;
-    this.amount = amount;
+    super(user, amount);
   }
 
   commit() {
